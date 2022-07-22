@@ -3,7 +3,7 @@ import { connection } from "./index.js";
 
 // DATABASE
 export const nameAlreadyExist = async (name) => {
-  const sql = `SELECT (name) FROM games WHERE name = $1`;
+  const sql = `SELECT (name) FROM games WHERE LOWER(name) = LOWER($1)`;
   const { rows: nameExist } = await connection.query(sql, [name]);
   if (nameExist && nameExist.length !== 0) {
     return true;

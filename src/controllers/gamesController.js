@@ -16,3 +16,13 @@ export const postGame = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+export const getGames = async (req, res) => {
+    const { name } = res.locals
+    try {
+        const gameList = await games.getGameWithCategoryName(name);
+        res.send(gameList)
+    } catch (error) {
+        res.sendStatus(500);
+    }
+}

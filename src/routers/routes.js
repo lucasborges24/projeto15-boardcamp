@@ -1,20 +1,33 @@
 import { Router } from "express";
 
-import { categoriesController } from "../controllers/index.js";
-import { categoriesMiddleware } from "../middlewares/index.js";
+import {
+  categoriesController as cC,
+  gamesController as gC,
+} from "../controllers/index.js";
+
+import {
+  categoriesMiddleware as cM,
+  gamesMiddleware as gM,
+} from "../middlewares/index.js";
 
 const router = Router();
 
 // categories routes
-router.get("/categories", categoriesController.getCategories);
+router.get("/categories", cC.getCategories);
 router.post(
   "/categories",
-  categoriesMiddleware.validateBody,
-  categoriesMiddleware.checkCategoryAlreadyExist,
-  categoriesController.postCategories
+  cM.validateBody,
+  cM.checkCategoryAlreadyExist,
+  cC.postCategories
 );
 
 // games routes
-router.post("/games", () => console.log('oi, meu chapa'))
+router.post(
+  "/games",
+  gM.validateBody,
+  gM.checkCategoryIdExist,
+  gM.checkNameAlreadyExist,
+  gC.postGame
+);
 
 export default router;

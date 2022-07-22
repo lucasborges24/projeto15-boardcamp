@@ -29,5 +29,6 @@ router.post(
   gM.checkNameAlreadyExist,
   gC.postGame
 );
+router.get("/games", gM.validateQuery, gC.getGames);
 
 export default router;

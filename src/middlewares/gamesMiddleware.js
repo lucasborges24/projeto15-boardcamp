@@ -26,25 +26,50 @@ export const validateBody = (req, res, next) => {
 };
 
 export const checkNameAlreadyExist = async (req, res, next) => {
-    const { name } = res.locals.game;
-    try {
-        const nameExist = await games.nameAlreadyExist(name);
-        if (nameExist) return res.sendStatus(409)
-    } catch (error) {
-        res.sendStatus(500);
-    }
-    next();
-    return true;
-}
+  const { name } = res.locals.game;
+  try {
+    const nameExist = await games.nameAlreadyExist(name);
+    if (nameExist) return res.sendStatus(409);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+  next();
+  return true;
+};
 
 export const checkCategoryIdExist = async (req, res, next) => {
-    const { categoryId } = res.locals.game;
-    try {
-        const categoryIdExist = await games.categoryIdExist(categoryId);
-        if (!categoryIdExist) return res.sendStatus(400)
-    } catch (error) {
-        res.sendStatus(500);
-    }
+  const { categoryId } = res.locals.game;
+  try {
+    const categoryIdExist = await games.categoryIdExist(categoryId);
+    if (!categoryIdExist) return res.sendStatus(400);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+  next();
+  return true;
+};
+
+export const validateQuery = (req, res, next) => {
+  const nameExists = req.query.name;
+  if (!nameExists) {
+    res.locals.name = "";
     next();
-    return true;
-}
+  } else {
+    const validationBefore = games.querySchema.validate({ name: nameExists });
+    if (validationBefore.error)
+      return res.status(400).send("Some error with query string");
+    const name = {
+      name: stripHtml(validationBefore.value.name).result,
+    };
+
+    const validationAfter = games.querySchema.validate(name);
+    if (validationAfter.error)
+      return res
+        .status(400)
+        .send("Some error with query string envolving HTML tag");
+    res.locals.name = name.name;
+    next();
+  }
+
+  return true;
+};

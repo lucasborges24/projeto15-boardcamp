@@ -14,4 +14,7 @@ router.post(
   categoriesController.postCategories
 );
 
+// games routes
+router.post("/games", () => console.log('oi, meu chapa'))
+
 export default router;

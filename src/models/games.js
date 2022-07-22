@@ -30,9 +30,19 @@ export const postGame = async (game) => {
   await connection.query(sql, game);
 };
 
+export const getGameWithCategoryName = async (op) => {
+    const sql = `SELECT games.*, categories."name" as "categoryName"  
+    FROM games
+    JOIN categories
+    ON games."categoryId" = categories."id"
+    WHERE LOWER(games."name") LIKE LOWER($1)`
+    const games = await connection.query(sql, [`${op}%`]);
+    return games.rows;
+}
+
 // SCHEMAS
 export const gameSchema = joi.object({
-  name: joi.string().trim().lowercase().required(),
+  name: joi.string().trim().required(),
   image: joi
     .string()
     .pattern(
@@ -43,3 +53,7 @@ export const gameSchema = joi.object({
   categoryId: joi.number().integer().min(0).required(),
   pricePerDay: joi.number().integer().min(0).required(),
 });
+
+export const querySchema = joi.object({
+    name: joi.string().trim().required()
+})

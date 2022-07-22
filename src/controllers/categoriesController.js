@@ -8,3 +8,13 @@ export const getCategories = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+export const postCategories = async (req, res) => {
+  const { name } = res.locals.name;
+  try {
+    await categories.postCategories(name);
+    res.sendStatus(201);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+};

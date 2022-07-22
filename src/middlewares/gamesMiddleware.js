@@ -17,7 +17,7 @@ export const validateBody = (req, res, next) => {
 
   const validationAfter = games.gameSchema.validate(game);
   if (validationAfter.error) {
-    return res.status(400).send("Some error with JSON body envolving HTML tag")
+    return res.status(400).send("Some error with JSON body envolving HTML tag");
   }
 
   res.locals.game = game;

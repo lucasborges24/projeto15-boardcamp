@@ -24,5 +24,5 @@ export const postCategories = async (name) => {
 
 // SCHEMAS
 export const categoriesSchema = joi.object({
-  name: joi.string().trim().required(),
+  name: joi.string().trim().lowercase().required(),
 });

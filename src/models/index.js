@@ -12,3 +12,4 @@ export { connection };
 
 export * as categories from "./categories.js";
 export * as games from "./games.js";
+export * as customers from "./customers.js";

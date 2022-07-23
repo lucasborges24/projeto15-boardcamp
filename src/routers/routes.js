@@ -31,4 +31,10 @@ router.post(
 );
 router.get("/games", gM.validateQuery, gC.getGames);
 
+// customers routes
+router.post("/customers", () => console.log('post'))
+router.get('/customers', () => console.log('get'))
+router.get('/customers/:id', () => console.log('get id'))
+router.put('/customers', () => console.log('put'))
+
 export default router;

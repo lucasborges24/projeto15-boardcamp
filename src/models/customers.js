@@ -18,8 +18,26 @@ export const cpfAlreadyExist = async (cpf) => {
 
 export const postCustomer = async (customer) => {
   const sql = `INSERT INTO customers ("name", "phone", cpf, birthday)
-  VALUES ($1, $2, $3, $4);`;
+  VALUES ($1, $2, $3, $4)`;
   await connection.query(sql, customer);
+};
+
+export const getCustomersWithCpf = async (op) => {
+  const sql = `SELECT * FROM customers WHERE cpf LIKE $1`;
+  const customers = await connection.query(sql, [`${op}%`]);
+  return customers.rows;
+};
+
+export const getCustomerById = async (id) => {
+  const sql = `SELECT * FROM customers WHERE "id" = $1`;
+  const customer = await connection.query(sql, [id]);
+  return customer.rows;
+};
+
+export const updateCustomerById = async (customer) => {
+  const sql = `UPDATE customers SET name = $1, phone = $2, cpf = $3, birthday = $4 WHERE id = $5`;
+  const result = await connection.query(sql, customer);
+  return result.rowCount;
 };
 
 // SCHEMAS
@@ -37,4 +55,20 @@ export const customersSchema = joi.object({
     .pattern(/[0-9]{11}/)
     .required(),
   birthday: Joi.date().format("YYYY-MM-DD").raw().required(),
+});
+
+export const cpfSchema = joi.object({
+  cpf: joi
+    .string()
+    .trim()
+    .pattern(/[0-9]{1,11}/)
+    .required(),
+});
+
+export const idSchema = joi.object({
+  id: joi
+    .string()
+    .trim()
+    .pattern(/^[0-9]+$/)
+    .required(),
 });

@@ -40,8 +40,22 @@ router.post(
   customersMiddleware.checkCpfAlreadyExist,
   customersController.postCustomer
 );
-router.get("/customers", () => console.log("get"));
-router.get("/customers/:id", () => console.log("get id"));
-router.put("/customers", () => console.log("put"));
+router.get(
+  "/customers",
+  customersMiddleware.validateCpfQuery,
+  customersController.getCustomers
+);
+router.get(
+  "/customers/:id",
+  customersMiddleware.validateIdParams,
+  customersController.getCustomerById
+);
+router.put(
+  "/customers/:id",
+  customersMiddleware.validateIdParams,
+  customersMiddleware.validateBody,
+  customersMiddleware.checkCpfAlreadyExist,
+  customersController.updateCustomer
+);
 
 export default router;

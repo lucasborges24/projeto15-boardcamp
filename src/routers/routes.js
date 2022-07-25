@@ -1,15 +1,18 @@
+import axios from "axios";
 import { Router } from "express";
 
 import {
   categoriesController,
   gamesController,
   customersController,
+  rentalsController,
 } from "../controllers/index.js";
 
 import {
   categoriesMiddleware,
   gamesMiddleware,
   customersMiddleware,
+  rentalsMiddleware,
 } from "../middlewares/index.js";
 
 const router = Router();
@@ -57,5 +60,37 @@ router.put(
   customersMiddleware.checkCpfAlreadyExist,
   customersController.updateCustomer
 );
+
+// rentals routes
+router.post(
+  "/rentals",
+  rentalsMiddleware.validateBody,
+  rentalsMiddleware.checkCustomerExistById,
+  rentalsMiddleware.checkGameExistById,
+  rentalsMiddleware.checkGamesRentaled,
+  rentalsController.postRental
+);
+
+router.post(
+  "/rentals/:id/return",
+  customersMiddleware.validateIdParams,
+  rentalsMiddleware.checkRentalById,
+  rentalsMiddleware.checkRentalIsFinishedById,
+  rentalsController.updateRental
+);
+
+router.get(
+  "/rentals",
+  rentalsMiddleware.validateQuery,
+  rentalsController.getRentals
+);
+
+router.delete(
+  "/rentals/:id",
+  customersMiddleware.validateIdParams,
+  rentalsMiddleware.checkRentalById,
+  rentalsMiddleware.checkRentalIsNotFinishedById,
+  rentalsController.deleteRental
+)
 
 export default router;

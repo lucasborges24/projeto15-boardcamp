@@ -117,3 +117,16 @@ export const checkRentalIsFinishedById = async (req, res, next) => {
   next();
   return true;
 };
+
+export const checkRentalIsNotFinishedById = async (req, res, next) => {
+  const { id } = res.locals;
+  try {
+    const rentalIsFinished = await rentals.getReturnDateById(id);
+    if (!rentalIsFinished) return res.sendStatus(400);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+  next();
+  return true;
+};
+

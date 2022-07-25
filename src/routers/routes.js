@@ -85,4 +85,12 @@ router.get(
   rentalsController.getRentals
 );
 
+router.delete(
+  "/rentals/:id",
+  customersMiddleware.validateIdParams,
+  rentalsMiddleware.checkRentalById,
+  rentalsMiddleware.checkRentalIsNotFinishedById,
+  rentalsController.deleteRental
+)
+
 export default router;

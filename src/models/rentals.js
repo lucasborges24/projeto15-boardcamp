@@ -88,8 +88,14 @@ export const updateRentalFinished = async (id, rental) => {
     SET "returnDate" = $1, "delayFee" = $2
     WHERE "id" = $3;`
     const updated = await connection.query(sql, [returnDate, delayFee, id])
-    console.log(returnDate)
     return updated;
+}
+
+export const deleteRentarById = async (id) => {
+    const sql = `DELETE FROM rentals
+    WHERE "id" = $1`
+    const deleted = await connection.query(sql, [id]);
+    return deleted;
 }
 
 // SCHEMAS

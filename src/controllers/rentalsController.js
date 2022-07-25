@@ -55,7 +55,6 @@ export const updateRental = async (req, res) => {
     returnDate: today.format("YYYY-MM-DD"),
     delayFee: fee,
   };
-  console.log(id);
 
   try {
     const updated = await rentals.updateRentalFinished(id, rentalUpdated);
@@ -68,3 +67,17 @@ export const updateRental = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+export const deleteRental = async (req, res) => {
+    const { id } = res.locals
+    try {
+        const deleted = await rentals.deleteRentarById(id)
+        if (deleted) {
+            return res.sendStatus(200)
+        } else {
+            return res.sendStatus(400)
+        }
+    } catch (error) {
+        res.sendStatus(500)
+    }
+}

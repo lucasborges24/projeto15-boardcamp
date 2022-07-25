@@ -64,7 +64,7 @@ export const checkGamesRentaled = async (req, res, next) => {
 };
 
 export const validateQuery = (req, res, next) => {
-  const customerId = req.query?.customerId
+  const customerId = req.query?.customerId;
   const gameId = req.query?.gameId;
 
   if (gameId) {
@@ -87,7 +87,33 @@ export const validateQuery = (req, res, next) => {
     res.locals.customerId = 0;
   }
 
+  next();
+  return true;
+};
 
+export const checkRentalById = async (req, res, next) => {
+  const { id } = res.locals;
+  try {
+    const rental = await rentals.getRentalById(id);
+    if (rental && rental.length !== 0) {
+      res.locals.rental = rental[0];
+      next();
+    } else {
+      return res.sendStatus(404);
+    }
+  } catch (error) {
+    res.sendStatus(500);
+  }
+};
+
+export const checkRentalIsFinishedById = async (req, res, next) => {
+  const { id } = res.locals;
+  try {
+    const rentalIsFinished = await rentals.getReturnDateById(id);
+    if (rentalIsFinished) return res.sendStatus(400);
+  } catch (error) {
+    res.sendStatus(500);
+  }
   next();
   return true;
 };

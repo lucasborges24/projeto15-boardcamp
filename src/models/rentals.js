@@ -58,9 +58,39 @@ export const getRentalsByGameIdAndCustomerId = async (customerId, gameId) => {
     WHERE rentals."customerId" ${customerIdOp} $1
     AND rentals."gameId" ${gameIdOp} $2`;
 
-    const { rows: rentalsList } = await connection.query(sql, [customerId, gameId])
-    return rentalsList;
+  const { rows: rentalsList } = await connection.query(sql, [
+    customerId,
+    gameId,
+  ]);
+  return rentalsList;
 };
+
+export const getRentalById = async (id) => {
+  const sql = `SELECT * 
+    FROM rentals
+    WHERE "id" = $1;`;
+  const { rows: rentalExist } = await connection.query(sql, [id]);
+  return rentalExist;
+};
+
+export const getReturnDateById = async (id) => {
+  const sql = `SELECT "returnDate" 
+    FROM rentals
+    WHERE "id" = $1;`;
+  const { rows: returnDateArray } = await connection.query(sql, [id]);
+  const { returnDate } = returnDateArray[0];
+  return returnDate;
+};
+
+export const updateRentalFinished = async (id, rental) => {
+    const { returnDate, delayFee } = rental
+    const sql = `UPDATE rentals
+    SET "returnDate" = $1, "delayFee" = $2
+    WHERE "id" = $3;`
+    const updated = await connection.query(sql, [returnDate, delayFee, id])
+    console.log(returnDate)
+    return updated;
+}
 
 // SCHEMAS
 

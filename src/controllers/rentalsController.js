@@ -1,5 +1,6 @@
 import { rentals } from "../models/index.js";
 import dayjs from "dayjs";
+import moment from "moment";
 
 export const postRental = async (req, res) => {
   const { rental } = res.locals;
@@ -35,6 +36,34 @@ export const getRentals = async (req, res) => {
       gameId
     );
     res.send(rentalsList);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+};
+
+export const updateRental = async (req, res) => {
+  const { rental, id } = res.locals;
+  const rentDate = moment.utc(rental.rentDate);
+  const today = moment();
+  const delay = today.diff(rentDate, "days");
+  let fee = null;
+  if (delay > 0) {
+    fee = delay * (rental.originalPrice / rental.daysRented);
+  }
+  const rentalUpdated = {
+    ...rental,
+    returnDate: today.format("YYYY-MM-DD"),
+    delayFee: fee,
+  };
+  console.log(id);
+
+  try {
+    const updated = await rentals.updateRentalFinished(id, rentalUpdated);
+    if (updated) {
+      return res.sendStatus(201);
+    } else {
+      return res.sendStatus(400);
+    }
   } catch (error) {
     res.sendStatus(500);
   }

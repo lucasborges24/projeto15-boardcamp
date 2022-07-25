@@ -1,15 +1,18 @@
+import axios from "axios";
 import { Router } from "express";
 
 import {
   categoriesController,
   gamesController,
   customersController,
+  rentalsController
 } from "../controllers/index.js";
 
 import {
   categoriesMiddleware,
   gamesMiddleware,
   customersMiddleware,
+  rentalsMiddleware
 } from "../middlewares/index.js";
 
 const router = Router();
@@ -57,5 +60,8 @@ router.put(
   customersMiddleware.checkCpfAlreadyExist,
   customersController.updateCustomer
 );
+
+// rentals routes
+axios.post('/rentals', (req, res) => res.send('finalizei'))
 
 export default router;

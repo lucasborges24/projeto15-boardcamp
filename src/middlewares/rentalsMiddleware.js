@@ -62,3 +62,33 @@ export const checkGamesRentaled = async (req, res, next) => {
     res.sendStatus(500);
   }
 };
+
+export const validateQuery = (req, res, next) => {
+  const customerId = req.query?.customerId
+  const gameId = req.query?.gameId;
+  console.log(gameId);
+  
+
+  if (gameId) {
+    const validationGame = rentals.querySchemaGame.validate({
+      gameId: Number(gameId),
+    });
+    if (validationGame.error) return res.sendStatus(400);
+    res.locals.gameId = validationGame.value;
+  } else {
+    res.locals.gameId = "";
+  }
+
+  if (customerId) {
+    const validationCustomer = rentals.querySchemaCustomer.validate({
+      customerId: Number(customerId),
+    });
+    if (validationCustomer.error) return res.sendStatus(400);
+    res.locals.customerId = validationCustomer.value;
+  } else {
+    res.locals.customerId = "";
+  }
+
+  next();
+  return true;
+};

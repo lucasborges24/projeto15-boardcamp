@@ -45,3 +45,11 @@ export const bodySchema = joi.object({
   gameId: joi.number().integer().min(0).required(),
   daysRented: joi.number().integer().min(0).required(),
 });
+
+export const querySchemaGame = joi.object({
+  gameId: joi.number().integer().min(0).required(),
+});
+
+export const querySchemaCustomer = joi.object({
+  customerId: joi.number().integer().min(0).required(),
+});

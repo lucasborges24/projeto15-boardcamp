@@ -3,6 +3,8 @@ import { connection } from "./index.js";
 
 // DATABASE
 
+
+
 // SCHEMAS
 
 export const bodySchema = joi.object({

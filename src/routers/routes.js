@@ -5,14 +5,14 @@ import {
   categoriesController,
   gamesController,
   customersController,
-  rentalsController
+  rentalsController,
 } from "../controllers/index.js";
 
 import {
   categoriesMiddleware,
   gamesMiddleware,
   customersMiddleware,
-  rentalsMiddleware
+  rentalsMiddleware,
 } from "../middlewares/index.js";
 
 const router = Router();
@@ -62,6 +62,11 @@ router.put(
 );
 
 // rentals routes
-axios.post('/rentals', (req, res) => res.send('finalizei'))
+router.post(
+  "/rentals",
+  rentalsMiddleware.validateBody,
+  rentalsMiddleware.checkCustomerExistById,
+  (req, res) => res.send("finalizei")
+);
 
 export default router;

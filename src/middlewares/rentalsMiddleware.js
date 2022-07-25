@@ -1,10 +1,10 @@
-import { rentals, customers } from "../models/index.js";
+import { rentals, customers, games } from "../models/index.js";
 import { stripHtml } from "string-strip-html";
 
 export const validateBody = (req, res, next) => {
   const validation = rentals.bodySchema.validate(req.body);
   if (validation.error) {
-    return res.status(400).send("Some error with JSON body")
+    return res.status(400).send("Some error with JSON body");
   }
 
   const rental = {
@@ -19,16 +19,46 @@ export const validateBody = (req, res, next) => {
 };
 
 export const checkCustomerExistById = async (req, res, next) => {
-    const { customerId } = res.locals.rental
-    try {
-        const customer = await customers.getCustomerById(customerId);
-        if (customer && customer.length !== 0) {
-          next();
-          return true;
-        }
-
-        return res.sendStatus(400)
-    } catch (error) {
-        res.sendStatus(500)
+  const { customerId } = res.locals.rental;
+  try {
+    const customer = await customers.getCustomerById(customerId);
+    if (customer && customer.length !== 0) {
+      next();
+      return true;
     }
-}
+
+    return res.sendStatus(400);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+};
+
+export const checkGameExistById = async (req, res, next) => {
+  const { gameId } = res.locals.rental;
+  try {
+    const game = await games.getGameById(gameId);
+    if (game && game.length !== 0) {
+      res.locals.game = game[0];
+      next();
+      return true;
+    }
+
+    return res.sendStatus(401);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+};
+
+export const checkGamesRentaled = async (req, res, next) => {
+  const { gameId } = res.locals.rental;
+  const { stockTotal } = res.locals.game;
+  try {
+    const gamesCount = await rentals.getGameRentaledByGameId(gameId);
+    if (gamesCount.length >= stockTotal) {
+      return res.sendStatus(400);
+    }
+    next();
+  } catch (error) {
+    res.sendStatus(500);
+  }
+};

@@ -66,7 +66,10 @@ router.post(
   "/rentals",
   rentalsMiddleware.validateBody,
   rentalsMiddleware.checkCustomerExistById,
-  (req, res) => res.send("finalizei")
+  rentalsMiddleware.checkGameExistById,
+  rentalsMiddleware.checkGamesRentaled,
+  rentalsController.postRental,
+  (req, res) => res.send(res.locals.game)
 );
 
 export default router;

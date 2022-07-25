@@ -40,6 +40,12 @@ export const getGameWithCategoryName = async (op) => {
     return games.rows;
 }
 
+export const getGameById = async (id) => {
+  const sql = `SELECT * FROM games WHERE "id" = $1`;
+  const game = await connection.query(sql, [id]);
+  return game.rows;
+}
+
 // SCHEMAS
 export const gameSchema = joi.object({
   name: joi.string().trim().required(),

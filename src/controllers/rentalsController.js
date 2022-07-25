@@ -25,3 +25,17 @@ export const postRental = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+export const getRentals = async (req, res) => {
+  const customerId = res.locals.customerId;
+  const gameId = res.locals.gameId;
+  try {
+    const rentalsList = await rentals.getRentalsByGameIdAndCustomerId(
+      customerId,
+      gameId
+    );
+    res.send(rentalsList);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+};

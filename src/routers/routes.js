@@ -71,6 +71,6 @@ router.post(
   rentalsController.postRental
 );
 
-router.get("/rentals", rentalsMiddleware.validateQuery, (req, res) => res.send(res.query));
+router.get("/rentals", rentalsMiddleware.validateQuery, rentalsController.getRentals, (req, res) => res.send(res.query));
 
 export default router;

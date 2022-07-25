@@ -66,17 +66,15 @@ export const checkGamesRentaled = async (req, res, next) => {
 export const validateQuery = (req, res, next) => {
   const customerId = req.query?.customerId
   const gameId = req.query?.gameId;
-  console.log(gameId);
-  
 
   if (gameId) {
     const validationGame = rentals.querySchemaGame.validate({
       gameId: Number(gameId),
     });
     if (validationGame.error) return res.sendStatus(400);
-    res.locals.gameId = validationGame.value;
+    res.locals.gameId = validationGame.value.gameId;
   } else {
-    res.locals.gameId = "";
+    res.locals.gameId = 0;
   }
 
   if (customerId) {
@@ -84,10 +82,11 @@ export const validateQuery = (req, res, next) => {
       customerId: Number(customerId),
     });
     if (validationCustomer.error) return res.sendStatus(400);
-    res.locals.customerId = validationCustomer.value;
+    res.locals.customerId = validationCustomer.value.customerId;
   } else {
-    res.locals.customerId = "";
+    res.locals.customerId = 0;
   }
+
 
   next();
   return true;
